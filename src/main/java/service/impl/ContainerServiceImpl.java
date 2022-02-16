@@ -33,19 +33,19 @@ public class ContainerServiceImpl implements ContainerService {
                 "Creación contenedor"
         );
 
-        logger.info("Dentro de la pagina");
+        logger.info("Dentro de la pagina: ✅");
 
         // flow origin
         SeleniumUtil.waitClickableElementById( ewait,"form:" + countryOrigin + "");
         SeleniumUtil.findElementById(driver,"form:" + countryOrigin + "").click();
 
-        logger.info("Origen seleccionado");
+        logger.info("Origen seleccionado: ✅");
 
         // flow destination
         SeleniumUtil.waitClickableElementById( ewait,"form:" + destinationCountry + "");
         SeleniumUtil.findElementById(driver,"form:" + destinationCountry + "").click();
 
-        logger.info("Destino Seleccionado");
+        logger.info("Destino Seleccionado: ✅");
 
         // flow id container
         SeleniumUtil.waitClickableElementById( ewait,"form:btnLimpiarVentana");
@@ -57,7 +57,7 @@ public class ContainerServiceImpl implements ContainerService {
 
         SeleniumUtil.findElementByXPath(driver,"//form/h2").click();
 
-        logger.info("Id del contenedor ingresado correctamente.");
+        logger.info("Id del contenedor ingresado correctamente: ✅");
 
         // flow select recipients
         int numRecipients = TableUtil.getSizeFromTable( driver, "form:tblListadoRecipientesSinContenedor" );
@@ -66,19 +66,17 @@ public class ContainerServiceImpl implements ContainerService {
 
         for (int i = 0; i < numRecipients; i ++) {
 
-            logger.info("Evaluando recipiente numero: " +  (i+1) );
-
             List<WebElement> column = SeleniumUtil.findElementsByXPath(
                     driver,"//table/tbody[@id='form:tblListadoRecipientesSinContenedor_data']/tr["+(i+1)+"]/td[3]/*"
             );
-
-            logger.info("Longitud de elementos en la columna seleccionada " + column.size() );
 
             if (column.size() == 0) {
 
                 SeleniumUtil.findElementById( driver, "form:tblListadoRecipientesSinContenedor:"+i+":btnSelectedRecipiente" ).click();
 
                 if (numRecipients > (i+1)) SeleniumUtil.waitClickableElementById( ewait,"form:tblListadoRecipientesSinContenedor:"+(1+1)+":btnSelectedRecipiente" );
+
+                logger.info("Recipiente " + ( i + 1 ) + " seleccionado: ✅");
 
             }
 
