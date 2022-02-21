@@ -24,6 +24,8 @@ public class Main {
         SystemStart.startSession( driver, ewait, "dua06","6666" );
         SystemStart.selectRoles( driver, ewait, "CZA_TENERIFE" );
 
+        // mantener todo en una consola
+
         containerService.windowGenerateContainer(
                 driver,
                 ewait,
