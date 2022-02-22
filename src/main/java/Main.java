@@ -5,28 +5,28 @@ import service.ContainerService;
 import service.impl.ContainerServiceImpl;
 import utils.SystemStart;
 
+import java.io.InputStream;
 import java.time.Duration;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        System.setProperty("webdriver.ie.driver","./src/main/resources/driver/IEDriverServer_1.exe");
+        System.setProperty("webdriver.ie.driver", "./src/main/resources/driver/IEDriverServer_1.exe");
 
         ContainerService containerService = new ContainerServiceImpl();
-        WebDriver driver                  = new InternetExplorerDriver();
-        WebDriverWait ewait               = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebDriver driver = new InternetExplorerDriver();
+        WebDriverWait ewait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
         driver.manage().window().maximize();
         driver.get("https://localhost:9443/duapost/login.jsp");
 
-        SystemStart.startPageToLogin( driver );
-        SystemStart.startSession( driver, ewait, "dua06","6666" );
-        SystemStart.selectRoles( driver, ewait, "CZA_TENERIFE" );
+        SystemStart.startPageToLogin(driver);
+        SystemStart.startSession(driver, ewait, "dua06", "6666");
+        SystemStart.selectRoles(driver, ewait, "CZA_TENERIFE");
 
-        // mantener todo en una consola
-
-        containerService.windowGenerateContainer(
+        /*containerService.flowGenerateContainer(
                 driver,
                 ewait,
                 "noUe",
@@ -34,7 +34,11 @@ public class Main {
                 "PRUEBAFLUJO098",
                 "CAMIONCITO",
                 "123456"
-        );
+        );*/
+
+        /*containerService.flowSendAltaEnvioTaric(driver, ewait, "PRUEBAFLUJO098");*/
+
+        containerService.flowSendContenedorAgrupado(driver, ewait, "PRUEBAFLUJO098");
 
     }
 

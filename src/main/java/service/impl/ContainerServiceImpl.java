@@ -19,7 +19,7 @@ public class ContainerServiceImpl implements ContainerService {
     Logger logger = Logger.getLogger("MyLog");
 
     @Override
-    public void windowGenerateContainer(
+    public void flowGenerateContainer(
             WebDriver driver,
             WebDriverWait ewait,
             String countryOrigin,
@@ -27,7 +27,7 @@ public class ContainerServiceImpl implements ContainerService {
             String idContainer,
             String numContainer,
             String numSeal
-    ) {
+    ) throws InterruptedException {
 
         SystemStart.enterWindowByMenuAndSubMenu(
                 driver,
@@ -71,21 +71,21 @@ public class ContainerServiceImpl implements ContainerService {
 
             // obteniendo la cantidad de elementos q hay en la columan 3
             List<WebElement> column = SeleniumUtil.findElementsByXPath(
-                    driver,"//table/tbody[@id='form:tblListadoRecipientesSinContenedor_data']/tr["+(i+1)+"]/td[3]/*"
+                    driver,"//table/tbody[@id='form:tblListadoRecipientesSinContenedor_data']/tr[" + ( i + 1 ) + "]/td[3]/*"
             );
 
             if (column.size() == 0) {
 
-                SeleniumUtil.findElementById( driver, "form:tblListadoRecipientesSinContenedor:"+i+":btnSelectedRecipiente" ).click();
+                SeleniumUtil.findElementById( driver, "form:tblListadoRecipientesSinContenedor:" + i + ":btnSelectedRecipiente" ).click();
 
                 logger.info("Recipiente " + ( i + 1 ) + " seleccionado: ✅");
 
                 // recalculando tamanio de la lista
                 numRecipients = TableUtil.getSizeFromTable( driver, "form:tblListadoRecipientesSinContenedor" );
 
-                if ( numRecipients > ( i+1 ) ) {
+                if ( numRecipients > ( i + 1 ) ) {
 
-                    SeleniumUtil.waitClickableElementById( ewait,"form:tblListadoRecipientesSinContenedor:"+(i+1)+":btnSelectedRecipiente" );
+                    SeleniumUtil.waitClickableElementById( ewait,"form:tblListadoRecipientesSinContenedor:" + ( i+  1 ) + ":btnSelectedRecipiente" );
 
                 } else {
 
@@ -159,15 +159,91 @@ public class ContainerServiceImpl implements ContainerService {
         SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarContenedorNOUEPopup']/div/div/div/button[1]").click();
         logger.info("Se acaban de enviar los dsdt ... proceda enviado las ALTA_SUMARIA_SINTRA!!!");
 
+        Thread.sleep(Duration.ofSeconds(6).toMillis());
+
+        driver.quit();
+
+    }
+
+
+    @Override
+    public void flowSendAltaEnvioTaric( WebDriver driver, WebDriverWait ewait, String idContainer) throws InterruptedException {
+        SystemStart.enterWindowByMenuAndSubMenu(
+                driver,
+                ewait,
+                "Contenedores",
+                "Creación contenedor"
+        );
+
+        logger.info("Dentro de la pagina: ✅");
+
+        // flujo para ingresar el id del contenedor
+        SeleniumUtil.waitClickableElementById( ewait,"form:bCacesa");
+
+        WebElement idGroup = SeleniumUtil.findElementById( driver,"form:lblIdAgrupacion");
+
+        idGroup.clear();
+        idGroup.sendKeys( idContainer );
+
+        SeleniumUtil.findElementByXPath(driver,"//form/h2").click();
+
+        logger.info("Id del contenedor ingresado correctamente: ✅");
+
+        // esperamos hasta que el boton de enviar altas pueda estar disponible
+        SeleniumUtil.waitClickableElementById( ewait,"form:btnEnviarAltaTaric");
+
+        // enviamos las altas envio taric
+        SeleniumUtil.findElementById(driver, "form:btnEnviarAltaTaric").click();
+        logger.info("Modal abierto ..!!");
+
+        // damos clic en la alerta de dialogo para enviar el DSDT
+        SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarAltaTaricPopup']/div/div/div/button[1]").click();
+        logger.info("Se están enviando las ALTA_ENVIO_TARIC!");
+
+        Thread.sleep(Duration.ofSeconds(180).toMillis());
+
     }
 
     @Override
-    public void windowRecoverContainer( WebDriver driver, WebDriverWait ewait ) {
+    public void flowSendContenedorAgrupado(
+            WebDriver driver,
+            WebDriverWait ewait,
+            String idContainer
+    ) throws InterruptedException {
 
-    }
+        SystemStart.enterWindowByMenuAndSubMenu(
+                driver,
+                ewait,
+                "Contenedores",
+                "Creación contenedor"
+        );
 
-    @Override
-    public void windowFlowCacesaInGenerateContainer(  WebDriver driver, WebDriverWait ewait  ) {
+        logger.info("Dentro de la pagina: ✅");
+
+        // flujo para ingresar el id del contenedor
+        SeleniumUtil.waitClickableElementById( ewait,"form:bCacesa");
+
+        WebElement idGroup = SeleniumUtil.findElementById( driver,"form:lblIdAgrupacion");
+
+        idGroup.clear();
+        idGroup.sendKeys( idContainer );
+
+        SeleniumUtil.findElementByXPath(driver,"//form/h2").click();
+
+        logger.info("Id del contenedor ingresado correctamente: ✅");
+
+        // esperamos hasta que el boton de enviar contenedor agrupado pueda estar disponible
+        SeleniumUtil.waitClickableElementById( ewait,"form:btnEnviarContenedor");
+
+        // enviamos el contenedor agrupado
+        SeleniumUtil.findElementById(driver, "form:btnEnviarContenedor").click();
+        logger.info("Modal abierto ..!!");
+
+        // damos clic en la alerta de dialogo para enviar el DSDT
+        SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarContenedorPopup']/div/div/div/button[1]").click();
+        logger.info("Se están enviando los CONTENEDOR_AGRUPADO!");
+
+        Thread.sleep(Duration.ofSeconds(120).toMillis());
 
     }
 
