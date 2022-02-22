@@ -9,7 +9,6 @@ import utils.SeleniumUtil;
 import utils.SystemStart;
 import utils.TableUtil;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -156,7 +155,7 @@ public class ContainerServiceImpl implements ContainerService {
         SeleniumUtil.findElementById(driver, "form:btnEnviarContDsdt").click();
         logger.info("Modal abierto ..!!");
 
-        // damos clic en la alerta de dialogo
+        // damos clic en la alerta de dialogo para enviar el DSDT
         SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarContenedorNOUEPopup']/div/div/div/button[1]").click();
         logger.info("Se acaban de enviar los dsdt ... proceda enviado las ALTA_SUMARIA_SINTRA!!!");
 
