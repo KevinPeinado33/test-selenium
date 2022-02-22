@@ -1,14 +1,18 @@
 package service.impl;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import service.ContainerService;
 import utils.SeleniumUtil;
 import utils.SystemStart;
 import utils.TableUtil;
 
+import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class ContainerServiceImpl implements ContainerService {
@@ -103,22 +107,39 @@ public class ContainerServiceImpl implements ContainerService {
 
         logger.info("Contenedor registrado correctamente!");
 
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                                        .withTimeout(Duration.ofSeconds(10))
+                                        .pollingEvery(Duration.ofSeconds(3))
+                                        .ignoring(NoSuchElementException.class);
 
-        // flujo para mandar el contenedor por DSDT
-        SeleniumUtil.waitClickableElementById(ewait, "form:lblNumMatricula");
-        String isNumContenedor = SeleniumUtil.findElementById(driver, "form:lblNumMatricula").getAttribute("disabled");
+        wait.until(ExpectedConditions.visibilityOf(SeleniumUtil.findElementById(driver, "form:btnAsignarContenedor")));
 
-        System.out.println(isNumContenedor);
+        wait.until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver driver) {
 
-        if (isNumContenedor == null && !"disabled".equals( isNumContenedor )) {
+                WebElement button = driver.findElement(By.xpath("//button[contains(@id, 'form:btnAsignarContenedor')]"));
 
-            logger.info("Por alguna razón no se activa el campo de texto 🤡!");
+                String enabled = null;
 
-            System.exit(0);
+                try {
 
-        }
+                    enabled = button.getAttribute("aria-disabled");
 
-        WebElement txtNnumContenedor = SeleniumUtil.findElementById( driver,"form:lblIdAgrupacion");
+                } catch (Exception e) {
+
+                    System.out.println(e.getMessage());
+                    enabled = "false";
+
+                }
+
+                return ("true".equals(enabled));
+
+            }
+        });
+
+
+        // llenado datos del formulario
+        WebElement txtNnumContenedor = SeleniumUtil.findElementById( driver,"form:lblNumMatricula");
         WebElement txtNumPrecinto = SeleniumUtil.findElementById(driver, "form:lblNumPrecinto");
 
         txtNnumContenedor.clear();
@@ -127,23 +148,18 @@ public class ContainerServiceImpl implements ContainerService {
         txtNnumContenedor.sendKeys( numContainer );
         txtNumPrecinto.sendKeys( numSeal );
 
-        String isBtnSenDSDT = SeleniumUtil.findElementById(driver, "form:btnEnviarContDsdt").getAttribute("disabled");
+        logger.info("Datos del formulario del contenedor rellenados correctamente!");
 
-        System.out.println(isBtnSenDSDT);
+        SeleniumUtil.findElementByXPath(driver,"//form/h2").click();
 
-        if (isBtnSenDSDT == null && !"disabled".equals( isBtnSenDSDT )) {
-
-            logger.info("No se habilita el botón de enviar DSDT 🤡!");
-
-            System.exit(0);
-
-        }
-
-        // espereamos hasta que el boton de DSDT pueda ser cliceado
-        SeleniumUtil.waitClickableElementById(ewait, "form:btnEnviarContDsdt");
+        // enviamos el DSDT
         SeleniumUtil.findElementById(driver, "form:btnEnviarContDsdt").click();
+        logger.info("Modal abierto ..!!");
 
-        // esperamos hasta que el alert dialog nos salga
+        // damos clic en la alerta de dialogo
+        SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarContenedorNOUEPopup']/div/div/div/button[1]").click();
+        logger.info("Se acaban de enviar los dsdt ... proceda enviado las ALTA_SUMARIA_SINTRA!!!");
+
     }
 
     @Override
