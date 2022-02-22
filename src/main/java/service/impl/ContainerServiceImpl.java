@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.*;
 import service.ContainerService;
+import utils.ScreenShot;
 import utils.SeleniumUtil;
 import utils.SystemStart;
 import utils.TableUtil;
@@ -238,6 +239,8 @@ public class ContainerServiceImpl implements ContainerService {
         // enviamos el contenedor agrupado
         SeleniumUtil.findElementById(driver, "form:btnEnviarContenedor").click();
         logger.info("Modal abierto ..!!");
+
+        ScreenShot.screenShot(driver, null, "paso final");
 
         // damos clic en la alerta de dialogo para enviar el DSDT
         SeleniumUtil.findElementByXPath(driver, "//div[@id='form:enviarContenedorPopup']/div/div/div/button[1]").click();
