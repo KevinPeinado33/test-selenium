@@ -250,4 +250,70 @@ public class ContainerServiceImpl implements ContainerService {
 
     }
 
+    @Override
+    public void flowConsultaAgrupaPendienteInfo(WebDriver driver, WebDriverWait ewait) {
+
+        SystemStart.enterWindowByMenuAndSubMenu(
+                driver,
+                ewait,
+                "Contenedores",
+                "Consulta agrupaciones pendientes"
+        );
+
+        // esperamos hasta q el boton melilla pueda darse clic
+        ewait.until(ExpectedConditions.elementToBeClickable(By.id("form:melilla")));
+
+        // damos
+        driver.findElement(By.id("form:melilla")).click();
+
+
+        // esperamos hasta que aparezca algo en la tabla
+        ewait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form:tblListadoContenedores_data")));
+
+        // esperamos hasta que se pueda dar clic en el boton de la flechita
+        ewait.until(ExpectedConditions.elementToBeClickable(By.id("form:tblListadoContenedores:0:btnSelectContenedor")));
+
+        driver.findElement(By.id("form:tblListadoContenedores:0:btnSelectContenedor")).click();
+
+
+        // esperamos hasta que aparezca el formulario
+        ewait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form:renderedEnvios")));
+
+        // empezamos a rellenar los datos
+
+        WebElement txtCodMrn = driver.findElement(By.id("form:lblCodMrn"));
+
+        txtCodMrn.clear();
+
+        txtCodMrn.sendKeys("PRUEBA01212");
+
+        driver.findElement(By.id("form:lblUbicacion_label")).click();
+        driver.findElement(By.xpath("//li[text()='ES005611ALMPOS']")).click();
+
+        List<WebElement> txtEnvioForm = driver.findElements(By.xpath("//span[@id='form:renderedEnvios']/*"));
+
+        int numEnviosList = txtEnvioForm.size();
+
+        for (int i = 0; i < numEnviosList; i++) {
+
+            WebElement inputEnvio = driver.findElement(
+                    By.xpath("//span[@id='form:renderedEnvios']/div["+(i+1)+"]/div[3]/input")
+            );
+
+            inputEnvio.clear();
+
+            inputEnvio.sendKeys("PRUEBA"+(i+1));
+
+        }
+
+        ewait.until(ExpectedConditions.elementToBeClickable(By.id("form:btnEnviarValores")));
+
+        driver.findElement(By.id("form:btnEnviarValores")).click();
+
+        driver.findElement(By.xpath("//div[@id='form:enviarValoresContenedor']/div/div/div/button[1]")).click();
+
+        System.out.println("Flujo termiando!!!!");
+
+    }
+
 }

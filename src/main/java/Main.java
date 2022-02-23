@@ -16,6 +16,7 @@ public class Main {
         System.setProperty("webdriver.ie.driver", "./src/main/resources/driver/IEDriverServer_1.exe");
 
         ContainerService containerService = new ContainerServiceImpl();
+
         WebDriver driver = new InternetExplorerDriver();
         WebDriverWait ewait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
@@ -38,7 +39,9 @@ public class Main {
 
         /*containerService.flowSendAltaEnvioTaric(driver, ewait, "PRUEBAFLUJO098");*/
 
-        containerService.flowSendContenedorAgrupado(driver, ewait, "PRUEBAFLUJO098");
+        /*containerService.flowSendContenedorAgrupado(driver, ewait, "PRUEBAFLUJO098");*/
+
+        containerService.flowConsultaAgrupaPendienteInfo(driver, ewait);
 
     }
 

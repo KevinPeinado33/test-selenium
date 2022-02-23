@@ -55,4 +55,7 @@ public interface ContainerService {
             String idContainer
     ) throws InterruptedException;
 
+
+    void flowConsultaAgrupaPendienteInfo(WebDriver driver, WebDriverWait ewait);
+
 }
