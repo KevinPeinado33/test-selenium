@@ -96,9 +96,9 @@ public class OcaMain {
         codInternacional.clear();
         codEnvioCanal.clear();
 
-        codNacional.sendKeys("QWEQEQWE");
-        codInternacional.sendKeys("QWEQW");
-        codEnvioCanal.sendKeys("WWWWWWWWW");
+        codNacional.sendKeys("CP286024055BR");
+        codInternacional.sendKeys("CP286024055BR");
+        codEnvioCanal.sendKeys("1");
 
 
         driver.findElement(By.id("filtrar")).click();
